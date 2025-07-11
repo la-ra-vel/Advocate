@@ -14,6 +14,9 @@ use App\Http\Controllers\QuotationDesController;
 use App\Http\Controllers\TodoController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 
 
 
@@ -127,3 +130,10 @@ require __DIR__ . '/auth.php';
 require base_path('resources/views/master_data/routes/country.php');
 require base_path('resources/views/court/routes/court.php');
 require base_path('resources/views/case/routes/case.php');
+
+Route::post('/logout-on-tab-close', function () {
+    Auth::logout();
+    Session::invalidate();
+    Session::regenerateToken();
+    return response()->noContent(); // 204 No Content
+})->withoutMiddleware([VerifyCsrfToken::class]);
